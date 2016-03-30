@@ -23,7 +23,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.log8430.group9.commands.Command;
 import com.log8430.group9.commands.CommandLoader;
-import com.log8430.group9.commands.CommandWatcher;
+
 
 /**
  * Main window of the application.
@@ -78,10 +78,10 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		this.commandPanel = new JPanel();
 		this.commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.PAGE_AXIS));
 		
-		CommandWatcher commandWatcher = new CommandWatcher();
+		/*CommandWatcher commandWatcher = new CommandWatcher();
 		commandWatcher.addObserver(this);
 		Thread thread = new Thread(commandWatcher);
-		thread.start();
+		thread.start();*/
 		
 		this.clearButton = new JButton("Clear");
 		this.clearButton.addActionListener(this);
