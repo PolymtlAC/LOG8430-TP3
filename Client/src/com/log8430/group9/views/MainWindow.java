@@ -1,18 +1,26 @@
 package com.log8430.group9.views;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -23,6 +31,8 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.log8430.group9.commands.Command;
 import com.log8430.group9.commands.CommandLoader;
+import com.log8430.group9.commands.CommandWatcher;
+import com.log8430.group9.utils.Http;
 
 
 /**
@@ -31,15 +41,19 @@ import com.log8430.group9.commands.CommandLoader;
  */
 public class MainWindow extends JFrame implements Observer, ActionListener, TreeSelectionListener {
 	
+	protected String apiURL = "http://localhost:8080";
+	
 	protected DefaultTreeModel fileSystemModel;
 	protected JTree tree;
+	
 	protected JPanel commandPanel;
-	protected JButton folderSelectionButton;
+	protected JButton apiSelectionButton;
 	protected JCheckBox autoRunCheckBox;
 	protected JButton clearButton;
-	protected JFileChooser fileChooser;
+	
 	protected ArrayList<UICommand> commands;
 	protected File currentFile;
+	protected String currentAPI;
 	
 	 /**
      * Constructor MainWindow.
@@ -50,12 +64,12 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 	public MainWindow() {
 		
 		this.commands = new ArrayList<>();
-		this.fileChooser = new JFileChooser();
-		this.fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		
+		this.currentAPI = "server";
 		this.currentFile = new File(System.getProperty("user.home"));
-		this.fileSystemModel = new DefaultTreeModel(new UIFile(this.currentFile));
+		this.fileSystemModel = new DefaultTreeModel(new FileNode());
 				
-		this.setTitle("LOG8430 - Option 1");
+		this.setTitle("LOG8430 - groupe 09 - Option 1");
 		this.setSize(800, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -68,20 +82,20 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		
 		JScrollPane treeView = new JScrollPane(this.tree);
-		this.folderSelectionButton = new JButton("Select a file or a folder");
-		this.folderSelectionButton.addActionListener(this);
+		this.apiSelectionButton = new JButton("Select an API");
+		this.apiSelectionButton.addActionListener(this);
 		JPanel westPanel = new JPanel();
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.PAGE_AXIS));
 		westPanel.add(treeView);
-		westPanel.add(this.folderSelectionButton);
+		westPanel.add(this.apiSelectionButton);
 		
 		this.commandPanel = new JPanel();
 		this.commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.PAGE_AXIS));
 		
-		/*CommandWatcher commandWatcher = new CommandWatcher();
+		CommandWatcher commandWatcher = new CommandWatcher();
 		commandWatcher.addObserver(this);
 		Thread thread = new Thread(commandWatcher);
-		thread.start();*/
+		thread.start();
 		
 		this.clearButton = new JButton("Clear");
 		this.clearButton.addActionListener(this);
@@ -135,8 +149,8 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		if(event.getSource() == this.folderSelectionButton) {
-			this.selectFolder();
+		if(event.getSource() == this.apiSelectionButton) {
+			this.selectAPI();
 		} else if(event.getSource() == this.clearButton) {
 			this.clear();
 		}
@@ -150,12 +164,12 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent event) {
-		UIFile uiFile = (UIFile) tree.getLastSelectedPathComponent();
+		FileNode uiFile = (FileNode) tree.getLastSelectedPathComponent();
 		
 		if(uiFile == null)
 			return;
 		
-		this.setCurrentFile(uiFile.getFile());
+		//this.setCurrentFile(uiFile.getFile());
 	}
 	
 	/**
@@ -185,23 +199,32 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		}
 	}
 
-	/** 
-	 * Opens the file chooser and modifies the current file if the user doesn't cancel.
-	 * Update the tree view with the new root if necessary.
-	 * If a file is selected the parent directory is set as root in the tree view.
-	 */
-	public void selectFolder() {
-        if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            
-            if(file.isDirectory()) {
-            	this.fileSystemModel.setRoot(new UIFile(file.getAbsolutePath()));
-            } else {
-            	this.fileSystemModel.setRoot(new UIFile(file.getParentFile().getAbsolutePath()));
-            }
-            
-            this.setCurrentFile(file);
-        }
+	public void selectAPI() {
+		String[] buttons = new String[] {"Server", "Dropbox", "Google Drive"};
+		int returnValue = JOptionPane.showOptionDialog(null, "Select the API you want to use", "Select an API",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+		switch(returnValue) {
+			case 1:
+				this.currentAPI = "dropbox";
+				if(Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(new URI("https://www.dropbox.com/1/oauth2/authorize"
+								+ "?client_id=0b5l8skd2z5xujs&response_type=code"
+								+ "&redirect_uri="+apiURL+"/dropbox/code"));
+					} catch (IOException | URISyntaxException e) {
+						e.printStackTrace();
+					}
+				}
+				break;
+			case 2:
+				this.currentAPI = "googledrive";
+				break;
+			default:
+				this.currentAPI = "server";	
+		}
+		
+		String result = Http.get(apiURL+"/auth", "?api="+this.currentAPI);
+		System.out.println(result);
 	}
 
 	/**
