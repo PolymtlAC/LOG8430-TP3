@@ -17,7 +17,11 @@ public class APIServer implements API {
 	}
 	
 	@Override
-	public String getAutorisationCode() {
+	public void setAccessToken(String token) {
+	}
+	
+	@Override
+	public String getAccessToken() {
 		return "";
 	}
 

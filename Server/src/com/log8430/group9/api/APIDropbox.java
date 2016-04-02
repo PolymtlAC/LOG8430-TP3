@@ -21,9 +21,9 @@ public class APIDropbox extends AbstractAPI implements API {
 		this.token = null;
 		String result = this.post("https://api.dropboxapi.com/1/oauth2/token", "grant_type=authorization_code"
 				+ "&client_id="+apiKey+"&client_secret="+apiSecret
-				+ "&redirect_uri=http://localhost:8080/api/code"
+				+ "&redirect_uri=http://localhost:8080/api/code?api=dropbox"
 				+ "&code="+code);
-		
+
 		JSONObject json = new JSONObject(result);
 		if(json.has("access_token")) {
 			this.token = json.getString("access_token");
@@ -32,12 +32,26 @@ public class APIDropbox extends AbstractAPI implements API {
 	
 	@Override
 	public boolean isConnected() {
-		return this.token != null;
+		if(this.token == null) {
+			return false;
+		} else {
+			JSONObject json = new JSONObject(this.get("https://api.dropboxapi.com/1/account/info",""));
+			if(json.has("display_name")) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	@Override
+	public void setAccessToken(String token) {
+		this.token = token;
 	}
 
 	@Override
-	public String getAutorisationCode() {
-		return this.code;
+	public String getAccessToken() {
+		return this.token;
 	}
 
 	@Override
@@ -74,5 +88,4 @@ public class APIDropbox extends AbstractAPI implements API {
 			connection.setRequestProperty ("Authorization", "Bearer " + this.token);
 		}
 	}
-	
 }

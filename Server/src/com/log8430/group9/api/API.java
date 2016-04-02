@@ -7,9 +7,10 @@ import com.log8430.group9.models.APIFile;
 public interface API {
 	
 	public String getName();
-	public APIFile metadata(String path);
 	public boolean isConnected();
-	public String getAutorisationCode();
+	public void setAccessToken(String token);
+	public String getAccessToken();
 	public void askForToken(String code);
 	
+	public APIFile metadata(String path);
 }

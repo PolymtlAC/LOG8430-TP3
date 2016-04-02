@@ -22,10 +22,15 @@ public class APIGoogleDrive extends AbstractAPI implements API {
 	public boolean isConnected() {
 		return this.token != null;
 	}
-
+	
 	@Override
-	public String getAutorisationCode() {
-		return this.code;
+	public void setAccessToken(String token) {
+		this.token = token;
+	}
+	
+	@Override
+	public String getAccessToken() {
+		return this.token;
 	}
 
 	@Override

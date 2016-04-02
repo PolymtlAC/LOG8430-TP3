@@ -36,18 +36,18 @@ public class APIController {
 	@RequestMapping("/api/auth")
     public String auth(
     		@RequestParam(value="api") String apiName,
-    		@RequestParam(value="code") String code) {
+    		@RequestParam(value="token") String token) {
 		
 		API api = APIFactory.getAPI(apiName);
-		api.askForToken(code);
+		api.setAccessToken(token);
 		
-    	return "{\"connected\": \""+api.isConnected()+"\", \"code\": \""+api.getAutorisationCode()+"\"}";
+    	return "{\"connected\": \""+api.isConnected()+"\", \"token\": \""+api.getAccessToken()+"\"}";
     }
 	
 	@RequestMapping("/api/is_connected")
     public String isConnected(@RequestParam(value="api", defaultValue="server") String apiName) {
 		API api = APIFactory.getAPI(apiName);
-    	return "{\"connected\": \""+api.isConnected()+"\", \"code\": \""+api.getAutorisationCode()+"\"}";
+    	return "{\"connected\": \""+api.isConnected()+"\", \"token\": \""+api.getAccessToken()+"\"}";
 	}
 	
 }

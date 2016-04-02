@@ -11,7 +11,6 @@ import com.log8430.group9.models.APIFile;
 
 public abstract class AbstractAPI implements API {
 
-	protected String code = null;
 	protected String token = null;
 	
 	public abstract void addConnectionProperties(HttpURLConnection connection);

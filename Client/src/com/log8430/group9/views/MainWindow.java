@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import com.log8430.group9.commands.Command;
 import com.log8430.group9.commands.CommandLoader;
 import com.log8430.group9.commands.CommandWatcher;
+import com.log8430.group9.utils.ConnectionManager;
 import com.log8430.group9.utils.Http;
 
 
@@ -43,8 +44,6 @@ import com.log8430.group9.utils.Http;
  *
  */
 public class MainWindow extends JFrame implements Observer, ActionListener, TreeSelectionListener {
-	
-	protected String apiURL = "http://localhost:8080";
 	
 	protected DefaultTreeModel fileSystemModel;
 	protected JTree tree;
@@ -210,15 +209,6 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		switch(returnValue) {
 			case 1:
 				this.currentAPI = "dropbox";
-				if(Desktop.isDesktopSupported()) {
-					try {
-						Desktop.getDesktop().browse(new URI("https://www.dropbox.com/1/oauth2/authorize"
-								+ "?client_id=0b5l8skd2z5xujs&response_type=code"
-								+ "&redirect_uri="+apiURL+"/api/code"));
-					} catch (IOException | URISyntaxException e) {
-						e.printStackTrace();
-					}
-				}
 				break;
 			case 2:
 				this.currentAPI = "googledrive";
@@ -227,15 +217,8 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 				this.currentAPI = "server";	
 		}
 		
-		boolean isConnected = false;
-		while(!isConnected) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			JSONObject json = new JSONObject(Http.get(this.apiURL+"/api/is_connected", "api="+this.currentAPI));
-			isConnected = json.getBoolean("connected");
+		if(!ConnectionManager.connect(this.currentAPI)) {
+			this.currentAPI = "server";
 		}
 		
 		this.fileSystemModel.setRoot(LazyLoader.load("/", this.currentAPI));
