@@ -1,4 +1,4 @@
-package com.log8430.group9;
+package com.log8430.group9.models;
 
 import java.io.File;
 import java.util.ArrayList;

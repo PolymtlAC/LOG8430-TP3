@@ -1,4 +1,4 @@
-package com.log8430.group9;
+package com.log8430.group9.controllers;
 
 import java.io.File;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.log8430.group9.api.API;
 import com.log8430.group9.api.APIFactory;
+import com.log8430.group9.models.APIFile;
 
 @RestController
 public class CommandController {

@@ -1,25 +1,43 @@
 package com.log8430.group9.api;
 
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.json.JSONObject;
 
-import com.log8430.group9.APIFile;
+import com.log8430.group9.models.APIFile;
 
 public class APIDropbox extends AbstractAPI implements API {
 	
-	private String token = null;
 	private static String apiKey = "0b5l8skd2z5xujs";
-	
-	public void setToken(String token) {
-		this.token = token;
-	}
+	private static String apiSecret = "gha8o37bytj0wae";
 	
 	@Override
 	public String getName() {
 		return "dropbox";
+	}
+	
+	@Override
+	public void askForToken(String code) {
+		this.token = null;
+		String result = this.post("https://api.dropboxapi.com/1/oauth2/token", "grant_type=authorization_code"
+				+ "&client_id="+apiKey+"&client_secret="+apiSecret
+				+ "&redirect_uri=http://localhost:8080/dropbox/code"
+				+ "&code="+code);
+		
+		JSONObject json = new JSONObject(result);
+		if(json.has("access_token")) {
+			this.token = json.getString("access_token");
+		}
+	}
+	
+	@Override
+	public boolean isConnected() {
+		return this.token != null;
+	}
+
+	@Override
+	public String getAutorisationCode() {
+		return this.code;
 	}
 
 	@Override
@@ -56,9 +74,5 @@ public class APIDropbox extends AbstractAPI implements API {
 			connection.setRequestProperty ("Authorization", "Bearer " + this.token);
 		}
 	}
-
-	@Override
-	public boolean isConnected() {
-		return this.token != null;
-	}
+	
 }

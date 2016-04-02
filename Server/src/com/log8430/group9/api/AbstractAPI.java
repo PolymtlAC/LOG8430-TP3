@@ -7,10 +7,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.log8430.group9.APIFile;
+import com.log8430.group9.models.APIFile;
 
 public abstract class AbstractAPI implements API {
 
+	protected String code = null;
+	protected String token = null;
+	
 	public abstract void addConnectionProperties(HttpURLConnection connection);
 	
 	public String get(String targetURL, String urlParameters) {
