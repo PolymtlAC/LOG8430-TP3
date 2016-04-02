@@ -6,15 +6,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.log8430.group9.api.API;
+import com.log8430.group9.api.APIFactory;
+
 @RestController
 public class CommandController {
 
-    @RequestMapping("/command/tree")
-    public APIFile tree(@RequestParam(value="api", defaultValue="server") String api) {
-    	File file = new File(System.getProperty("user.dir")+"/root");
-    	APIFile apiFile = new APIFile(file);
-    	apiFile.setChildren(file);
-    	return apiFile;
+    @RequestMapping("/command/metadata")
+    public APIFile tree(
+    		@RequestParam(value="api", defaultValue="server") String apiName,
+    		@RequestParam(value="path") String path) {
+    	
+    	API api = APIFactory.getAPI(apiName);
+    	return api.metadata(path);
     }
     
 }

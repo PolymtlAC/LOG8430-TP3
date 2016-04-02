@@ -26,8 +26,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+
+import org.json.JSONObject;
 
 import com.log8430.group9.commands.Command;
 import com.log8430.group9.commands.CommandLoader;
@@ -67,18 +70,19 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		
 		this.currentAPI = "server";
 		this.currentFile = new File(System.getProperty("user.home"));
-		this.fileSystemModel = new DefaultTreeModel(new FileNode());
+		this.fileSystemModel = new DefaultTreeModel(LazyLoader.load("/", this.currentAPI));
 				
 		this.setTitle("LOG8430 - groupe 09 - Option 1");
 		this.setSize(800, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
 		this.setLayout(new BorderLayout());
 		
 		//this.fileSystemModel.setRoot(new File(System.getProperty("user.home")));
 		this.tree = new JTree(this.fileSystemModel);
 		this.tree.addTreeSelectionListener(this);
+		LazyLoader loader = new LazyLoader();
+		tree.addTreeWillExpandListener(loader);
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		
 		JScrollPane treeView = new JScrollPane(this.tree);
@@ -164,12 +168,12 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent event) {
-		FileNode uiFile = (FileNode) tree.getLastSelectedPathComponent();
+		/*FileNode uiFile = (FileNode) tree.getLastSelectedPathComponent();
 		
 		if(uiFile == null)
 			return;
 		
-		//this.setCurrentFile(uiFile.getFile());
+		//this.setCurrentFile(uiFile.getFile());*/
 	}
 	
 	/**
@@ -223,8 +227,19 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 				this.currentAPI = "server";	
 		}
 		
-		String result = Http.get(apiURL+"/auth", "?api="+this.currentAPI);
-		System.out.println(result);
+		boolean isConnected = false;
+		while(!isConnected) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			JSONObject json = new JSONObject(Http.get(this.apiURL+"/api/is_connected", "api="+this.currentAPI));
+			isConnected = json.getBoolean("connected");
+		}
+		
+		this.fileSystemModel.setRoot(LazyLoader.load("/", this.currentAPI));
+		this.fileSystemModel.reload();
 	}
 
 	/**
