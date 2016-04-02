@@ -21,7 +21,7 @@ public class APIDropbox extends AbstractAPI implements API {
 		this.token = null;
 		String result = this.post("https://api.dropboxapi.com/1/oauth2/token", "grant_type=authorization_code"
 				+ "&client_id="+apiKey+"&client_secret="+apiSecret
-				+ "&redirect_uri=http://localhost:8080/dropbox/code"
+				+ "&redirect_uri=http://localhost:8080/api/code"
 				+ "&code="+code);
 		
 		JSONObject json = new JSONObject(result);

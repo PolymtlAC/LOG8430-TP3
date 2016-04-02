@@ -214,7 +214,7 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 					try {
 						Desktop.getDesktop().browse(new URI("https://www.dropbox.com/1/oauth2/authorize"
 								+ "?client_id=0b5l8skd2z5xujs&response_type=code"
-								+ "&redirect_uri="+apiURL+"/dropbox/code"));
+								+ "&redirect_uri="+apiURL+"/api/code"));
 					} catch (IOException | URISyntaxException e) {
 						e.printStackTrace();
 					}
