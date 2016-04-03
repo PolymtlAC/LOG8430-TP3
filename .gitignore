@@ -1,0 +1,4 @@
+/Client/bin/
+/Client/target/
+/Client/auth/**
+!/Client/auth/.gitkeep
