@@ -5,13 +5,15 @@ package com.log8430.group9.commands;
  */
 public interface Command {
 	
+	public static String urlAPI = "http://localhost:8080";
+	
 	/**
 	 * Returns a String which contains the result of the command applied to the file.
 	 *
 	 * @param file  the parameter file for the command
 	 * @return  a String representing the result of the command
 	 */
-	public String execute(String path, String api);
+	public String execute(String id, String api);
 	
 	/**
 	 * Returns true if the command accepts a file as parameter.

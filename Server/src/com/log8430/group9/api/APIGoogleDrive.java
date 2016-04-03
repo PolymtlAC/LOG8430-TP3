@@ -74,11 +74,14 @@ public class APIGoogleDrive extends AbstractAPI implements API {
 		} else {
 			result = this.get("https://www.googleapis.com/drive/v2/files/"+id, "");
 			json = new JSONObject(result);
+			
 			isDir = false;
 			if(json.optString("mimeType") == "application/vnd.google-apps.folder")
 				isDir = true;
-			apiFile = new APIFile(json.getString("id"), json.getString("title"), "", isDir);
 			
+			apiFile = new APIFile(id, json.getString("title"), "Not supported in Google Drive", isDir);
+			
+			// Get the children
 			result = this.get("https://www.googleapis.com/drive/v2/files/"+id+"/children", "");
 		}
 		
