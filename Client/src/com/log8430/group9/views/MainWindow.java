@@ -54,7 +54,7 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 	protected JButton clearButton;
 	
 	protected ArrayList<UICommand> commands;
-	protected File currentFile;
+	protected FileNode currentFile;
 	protected String currentAPI;
 	
 	 /**
@@ -68,7 +68,7 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		this.commands = new ArrayList<>();
 		
 		this.currentAPI = "server";
-		this.currentFile = new File(System.getProperty("user.home"));
+		this.currentFile = null;
 		this.fileSystemModel = new DefaultTreeModel(LazyLoader.load("/", this.currentAPI));
 				
 		this.setTitle("LOG8430 - groupe 09 - Option 1");
@@ -167,25 +167,26 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent event) {
-		/*FileNode uiFile = (FileNode) tree.getLastSelectedPathComponent();
+		FileNode file = (FileNode) tree.getLastSelectedPathComponent();
 		
-		if(uiFile == null)
+		if(file == null)
 			return;
 		
-		//this.setCurrentFile(uiFile.getFile());*/
+		this.setCurrentFile(file);
 	}
 	
 	/**
-	 * Update the current file for all commands. 
+	 * Update the current file and the current API for all commands. 
 	 * And if the autoRun is checked, executes all the commands.
 	 * 
 	 * @param file
 	 */
-	private void setCurrentFile(File file) {
+	private void setCurrentFile(FileNode file) {
 		this.currentFile = file;
 		
         for(UICommand command : commands) {
 			command.setCurrentFile(file);
+			command.setCurrentAPI(this.currentAPI);
 			
 			if(this.autoRunCheckBox.isSelected() && command.isEnabled()) {
 				command.execute();
@@ -219,6 +220,10 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		
 		if(!ConnectionManager.connect(this.currentAPI)) {
 			this.currentAPI = "server";
+		}
+		
+		for(UICommand command : commands) {
+			command.setCurrentAPI(this.currentAPI);
 		}
 		
 		this.fileSystemModel.setRoot(LazyLoader.load("/", this.currentAPI));

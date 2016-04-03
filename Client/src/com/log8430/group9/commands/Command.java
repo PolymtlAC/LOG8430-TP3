@@ -1,7 +1,5 @@
 package com.log8430.group9.commands;
 
-import java.io.File;
-
 /**
  * Common interface that all the commands must implements.
  */
@@ -13,7 +11,7 @@ public interface Command {
 	 * @param file  the parameter file for the command
 	 * @return  a String representing the result of the command
 	 */
-	public String execute(File file);
+	public String execute(String path, String api);
 	
 	/**
 	 * Returns true if the command accepts a file as parameter.

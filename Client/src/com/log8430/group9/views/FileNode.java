@@ -1,4 +1,5 @@
 package com.log8430.group9.views;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -97,6 +98,10 @@ public class FileNode implements TreeNode {
 
 	public void setChildren(ArrayList<FileNode> children) {
 		this.children = children;
+	}
+
+	public String getAbsolutePath() {
+		return this.path;
 	}
 
 }

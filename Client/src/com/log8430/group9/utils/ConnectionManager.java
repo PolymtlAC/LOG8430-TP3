@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
@@ -48,7 +49,8 @@ public class ConnectionManager {
 				if(Desktop.isDesktopSupported()) {
 					try {
 						Desktop.getDesktop().browse(new URI("https://www.dropbox.com/1/oauth2/authorize"
-								+ "?client_id=0b5l8skd2z5xujs&response_type=code"
+								+ "?client_id=0b5l8skd2z5xujs"
+								+ "&response_type=code"
 								+ "&redirect_uri="+apiURL+"/api/code?api=dropbox"));
 					} catch (IOException | URISyntaxException e) {
 						e.printStackTrace();
@@ -56,13 +58,24 @@ public class ConnectionManager {
 				}
 				break;
 			case "googledrive":
+				if(Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(new URI("https://accounts.google.com/o/oauth2/v2/auth"
+								+ "?client_id=21850492540-vrduvcqo1l2airu6u1d02eivddcip48u.apps.googleusercontent.com"
+								+ "&response_type=code"
+								+ "&scope="+URLEncoder.encode("https://www.googleapis.com/auth/drive", "UTF-8")
+								+ "&redirect_uri="+URLEncoder.encode(apiURL+"/api/code?api=googledrive", "UTF-8")));
+					} catch (IOException | URISyntaxException e) {
+						e.printStackTrace();
+					}
+				}
 				break;
 		}
 		
 		boolean isConnected = false;
 		int i = 0;
 		String token = null;
-		while(!isConnected || i > 60) { // while not authorized or wait 30 seconds
+		while(!isConnected && i < 60) { // while not authorized or wait 30 seconds
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
@@ -74,11 +87,12 @@ public class ConnectionManager {
 			i++;
 		}
 		
-		if(token != null) {
+		if(isConnected && token != null) {
 			saveToken(token, api);
+			return true;
+		} else {
+			return false;
 		}
-		
-		return true;
 	}
 
 	private static void saveToken(String token, String api) {

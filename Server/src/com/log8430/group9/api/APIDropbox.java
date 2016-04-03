@@ -55,6 +55,13 @@ public class APIDropbox extends AbstractAPI implements API {
 	}
 
 	@Override
+	public void addConnectionProperties(HttpURLConnection connection) {
+		if(this.token != null) {
+			connection.setRequestProperty ("Authorization", "Bearer " + this.token);
+		}
+	}
+
+	@Override
 	public APIFile metadata(String path) {
 		String result = this.get("https://api.dropboxapi.com/1/metadata/auto"+path, "list=true");
 		JSONObject json = new JSONObject(result);
@@ -80,12 +87,5 @@ public class APIDropbox extends AbstractAPI implements API {
 		}
 		
 		return apiFile;
-	}
-
-	@Override
-	public void addConnectionProperties(HttpURLConnection connection) {
-		if(this.token != null) {
-			connection.setRequestProperty ("Authorization", "Bearer " + this.token);
-		}
 	}
 }

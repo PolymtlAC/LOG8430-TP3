@@ -20,7 +20,8 @@ public class UICommand extends JPanel {
 	protected Command command;
 	protected JButton commandButton;
 	protected JLabel commandResult;
-	protected File currentFile;
+	protected FileNode currentFile;
+	protected String currentAPI;
 	
 	/**
 	 * Constructor UICommand.
@@ -51,7 +52,7 @@ public class UICommand extends JPanel {
 	 */
 	public void execute() {
 		try {
-			this.commandResult.setText(this.command.execute(currentFile));
+			this.commandResult.setText(this.command.execute(this.currentFile.getAbsolutePath(), this.currentAPI));
 		} catch(Exception e) {
 			this.commandResult.setText(e.getMessage());
 		}
@@ -72,10 +73,14 @@ public class UICommand extends JPanel {
 	 * 
 	 * @param file the new current file
 	 */
-	public void setCurrentFile(File file) {
+	public void setCurrentFile(FileNode file) {
 		this.currentFile = file;
 		this.commandButton.setEnabled(this.isEnabled());
 		this.clear();
+	}
+	
+	public void setCurrentAPI(String api) {
+		this.currentAPI = api;
 	}
 	
 	/**
@@ -84,9 +89,12 @@ public class UICommand extends JPanel {
 	 * @return a boolean telling if the command can be executed giving the current file type (file or folder).
 	 */
 	public boolean isEnabled() {
-		if(this.currentFile.isDirectory() && !this.command.folderCompatible()) {
+		if(this.currentFile == null) {
 			return false;
-		} else if(!this.currentFile.isDirectory() && !this.command.fileCompatible()) {
+		}
+		if(!this.currentFile.isLeaf() && !this.command.folderCompatible()) {
+			return false;
+		} else if(this.currentFile.isLeaf() && !this.command.fileCompatible()) {
 			return false;
 		} else {
 			return true;
