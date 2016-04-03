@@ -5,12 +5,14 @@ import java.util.ArrayList;
 
 public class APIFile {
 
+	private String id;
     private String name;
     private String path;
     private ArrayList<APIFile> children;
     private boolean directory;
     
-    public APIFile(String name, String path, boolean directory) {
+    public APIFile(String id, String name, String path, boolean directory) {
+    	this.id = id;
     	this.name = name;
     	this.path = path;
     	this.directory = directory;
@@ -18,12 +20,13 @@ public class APIFile {
     }
 
     public APIFile(String name) {
-    	this(name, "", false);
+    	this("", name, "", false);
     }
     
     public APIFile(File file, int depth) {
         this.name = file.getName();
         this.path = file.getPath().replaceFirst(System.getProperty("user.dir")+"/root/?", "/");
+        this.id = this.path;
         this.directory = file.isDirectory();
         if(depth > 0 && this.directory) {
         	this.children = new ArrayList<APIFile>();
@@ -34,6 +37,10 @@ public class APIFile {
         	this.children = null;
         }
         
+    }
+    
+    public String getId() {
+        return id;
     }
 
     public String getName() {

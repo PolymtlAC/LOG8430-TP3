@@ -14,22 +14,22 @@ import com.log8430.group9.utils.Http;
 
 public class LazyLoader implements TreeWillExpandListener {
 
-	public static FileNode load(String path, String api) {
+	public static FileNode load(String id, String api) {
 		String params;
 		try {
-			params = "api="+api+"&path="+URLEncoder.encode(path, "UTF-8");
+			params = "api="+api+"&id="+URLEncoder.encode(id, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			params = "api="+api+"&path=/";
+			params = "api="+api+"&id=/";
 		}
 		
 		JSONObject json = new JSONObject(Http.get("http://localhost:8080/command/metadata", params));
 
-		FileNode node = new FileNode(json.getString("name"), json.getString("path"), json.getBoolean("directory"), api);
+		FileNode node = new FileNode(json.getString("id"), json.getString("name"), json.getString("path"), json.getBoolean("directory"), api);
 		
 		if(json.optJSONArray("children") != null) {
 			for(Object child : json.optJSONArray("children")) {
 				JSONObject jsonChild = (JSONObject) child;
-				node.addChild(new FileNode(jsonChild.getString("name"), jsonChild.getString("path"), jsonChild.getBoolean("directory"), api));
+				node.addChild(new FileNode(jsonChild.getString("id"), jsonChild.getString("name"), jsonChild.getString("path"), jsonChild.getBoolean("directory"), api));
 			}
 		}
 		
@@ -42,7 +42,7 @@ public class LazyLoader implements TreeWillExpandListener {
 		Object[] nodes =  treepath.getPath();
 		FileNode lastNode = (FileNode) nodes[nodes.length-1];
 	
-		FileNode node = LazyLoader.load(lastNode.getPath(), lastNode.getAPI());
+		FileNode node = LazyLoader.load(lastNode.getId(), lastNode.getAPI());
 		lastNode.setChildren(node.getChilden());
 	}
 

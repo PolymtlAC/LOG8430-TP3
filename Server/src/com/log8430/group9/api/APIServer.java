@@ -31,16 +31,16 @@ public class APIServer implements API {
 	}
 	
 	@Override
-	public APIFile metadata(String path) {
+	public APIFile metadata(String id) {
 		String filePath = System.getProperty("user.dir")+"/root";
-    	if(!path.equals("/")) {
-    		filePath += path;
+    	if(!id.equals("/")) {
+    		filePath += id;
     	}
     	
     	try {
     		File file = new File(filePath);
         	APIFile apiFile = new APIFile(file, 1);
-        	if(path.equals("/")) {
+        	if(id.equals("/")) {
         		apiFile.setName("/");
         	}
         	

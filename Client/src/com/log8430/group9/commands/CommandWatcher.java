@@ -23,8 +23,10 @@ public class CommandWatcher extends Observable implements Runnable {
 		this.files = new HashMap<>();
 		
 		File commandsDir = new File("commands");
-		for(File file : commandsDir.listFiles()) {
-			this.files.put(file.getName(), file.lastModified());
+		if(commandsDir.listFiles() != null) {
+			for(File file : commandsDir.listFiles()) {
+				this.files.put(file.getName(), file.lastModified());
+			}
 		}
 	}
 	
@@ -39,25 +41,27 @@ public class CommandWatcher extends Observable implements Runnable {
 	    while(true) {
 	    	File commandsDir = new File("commands");
 	    	File[] commandsFile = commandsDir.listFiles();
-	    	if(commandsFile.length != files.size()) {
-	    		this.setChanged();
-	    		this.notifyObservers();
-	    		this.init();
-	    	} else {
-	    		for(File file : commandsFile) {
-	    			if(this.files.get(file.getName()) != file.lastModified()) {
-	    				this.setChanged();
-	    				this.notifyObservers();
-	    				this.init();
-	    				break;
-	    			}
-	    		}
-	    	}
-	    	
-	    	try {
-	    		Thread.sleep(500);
-	    	} catch (InterruptedException e) {
-	    		e.printStackTrace();
+	    	if(commandsFile != null) {
+		    	if(commandsFile.length != files.size()) {
+		    		this.setChanged();
+		    		this.notifyObservers();
+		    		this.init();
+		    	} else {
+		    		for(File file : commandsFile) {
+		    			if(this.files.get(file.getName()) != file.lastModified()) {
+		    				this.setChanged();
+		    				this.notifyObservers();
+		    				this.init();
+		    				break;
+		    			}
+		    		}
+		    	}
+		    	
+		    	try {
+		    		Thread.sleep(500);
+		    	} catch (InterruptedException e) {
+		    		e.printStackTrace();
+		    	}
 	    	}
 	    }
 	}

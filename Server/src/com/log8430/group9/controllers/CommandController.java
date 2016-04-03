@@ -16,10 +16,10 @@ public class CommandController {
     @RequestMapping("/command/metadata")
     public APIFile tree(
     		@RequestParam(value="api", defaultValue="server") String apiName,
-    		@RequestParam(value="path") String path) {
+    		@RequestParam(value="id") String id) {
     	
     	API api = APIFactory.getAPI(apiName);
-    	return api.metadata(path);
+    	return api.metadata(id);
     }
     
 }

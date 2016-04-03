@@ -62,18 +62,18 @@ public class APIDropbox extends AbstractAPI implements API {
 	}
 
 	@Override
-	public APIFile metadata(String path) {
-		String result = this.get("https://api.dropboxapi.com/1/metadata/auto"+path, "list=true");
+	public APIFile metadata(String id) {
+		String result = this.get("https://api.dropboxapi.com/1/metadata/auto"+id, "list=true");
 		JSONObject json = new JSONObject(result);
 		String name;
-		if(path.equals("/")) {
+		if(id.equals("/")) {
 			name = "/";
 		} else {
-			String[] tmp = path.split("/");
+			String[] tmp = id.split("/");
 			name = tmp[tmp.length-1];
 		}
 		
-		APIFile apiFile = new APIFile(name, path, json.getBoolean("is_dir"));
+		APIFile apiFile = new APIFile(id, name, id, json.getBoolean("is_dir"));
 		
 		if(json.optJSONArray("contents") != null) {
 			for(Object obj : json.getJSONArray("contents")) {
@@ -82,7 +82,7 @@ public class APIDropbox extends AbstractAPI implements API {
 				String[] tmp2 = childPath.split("/");
 				String childName = tmp2[tmp2.length-1];
 				
-				apiFile.addChild(new APIFile(childName, childPath, jsonChild.getBoolean("is_dir")));
+				apiFile.addChild(new APIFile(childPath, childName, childPath, jsonChild.getBoolean("is_dir")));
 			}
 		}
 		

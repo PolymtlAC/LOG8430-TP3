@@ -52,7 +52,7 @@ public class UICommand extends JPanel {
 	 */
 	public void execute() {
 		try {
-			this.commandResult.setText(this.command.execute(this.currentFile.getAbsolutePath(), this.currentAPI));
+			this.commandResult.setText(this.command.execute(this.currentFile.getId(), this.currentAPI));
 		} catch(Exception e) {
 			this.commandResult.setText(e.getMessage());
 		}

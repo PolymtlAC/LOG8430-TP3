@@ -17,13 +17,15 @@ import com.log8430.group9.utils.Http;
  */
 public class FileNode implements TreeNode {
 	
+	private String id;
 	private String name;
 	private String path;
 	private ArrayList<FileNode> children;
 	private boolean directory;
 	private String api;
 	
-	public FileNode(String filename, String path, boolean directory, String api) {
+	public FileNode(String id, String filename, String path, boolean directory, String api) {
+		this.id = id;
 		this.name = filename;
 		this.path = path;
 		this.directory = directory;
@@ -100,8 +102,8 @@ public class FileNode implements TreeNode {
 		this.children = children;
 	}
 
-	public String getAbsolutePath() {
-		return this.path;
+	public String getId() {
+		return this.id;
 	}
 
 }

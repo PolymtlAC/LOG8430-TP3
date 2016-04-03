@@ -18,7 +18,16 @@ public class APIGoogleDrive extends AbstractAPI implements API {
 
 	@Override
 	public boolean isConnected() {
-		return this.token != null;
+		if(this.token == null) {
+			return false;
+		} else {
+			JSONObject json = new JSONObject(this.get("https://www.googleapis.com/drive/v2/files/root/children",""));
+			if(json.has("items")) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	@Override
@@ -53,24 +62,41 @@ public class APIGoogleDrive extends AbstractAPI implements API {
 	}
 	
 	@Override
-	public APIFile metadata(String path) {
+	public APIFile metadata(String id) {
+		String result;
+		JSONObject json;
+		boolean isDir;
+		APIFile apiFile;
 		
-		String result = this.get("https://www.googleapis.com/drive/v2/files", "");
+		if(id.equals("/")) {
+			apiFile = new APIFile("root", "/", "/", true);
+			result = this.get("https://www.googleapis.com/drive/v2/files/root/children", "");
+		} else {
+			result = this.get("https://www.googleapis.com/drive/v2/files/"+id, "");
+			json = new JSONObject(result);
+			isDir = false;
+			if(json.optString("mimeType") == "application/vnd.google-apps.folder")
+				isDir = true;
+			apiFile = new APIFile(json.getString("id"), json.getString("title"), "", isDir);
+			
+			result = this.get("https://www.googleapis.com/drive/v2/files/"+id+"/children", "");
+		}
 		
-		JSONObject json = new JSONObject(result);
-		
-		APIFile apiFile = new APIFile("/", path, true);
+		json = new JSONObject(result);
 		
 		if(json.optJSONArray("items") != null) {
 			for(Object obj : json.getJSONArray("items")) {
 				JSONObject jsonChild = (JSONObject) obj;
-				String childName = jsonChild.getString("title");
+				String childId = jsonChild.getString("id");
 				
-				boolean isDir = false;
-				if(json.optString("mimeType") == "application/vnd.google-apps.folder")
+				result = this.get("https://www.googleapis.com/drive/v2/files/"+childId, "");
+				jsonChild = new JSONObject(result);
+				
+				isDir = false;
+				if(jsonChild.optString("mimeType").equals("application/vnd.google-apps.folder"))
 					isDir = true;
 				
-				apiFile.addChild(new APIFile(childName, "/"+childName, isDir));
+				apiFile.addChild(new APIFile(childId, jsonChild.getString("title"), "", isDir));
 			}
 		}
 	

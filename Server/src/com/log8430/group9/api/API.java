@@ -12,5 +12,5 @@ public interface API {
 	public String getAccessToken();
 	public void askForToken(String code);
 	
-	public APIFile metadata(String path);
+	public APIFile metadata(String id);
 }
