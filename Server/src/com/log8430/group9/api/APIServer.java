@@ -32,9 +32,16 @@ public class APIServer implements API {
 	
 	@Override
 	public APIFile metadata(String id) {
+		File fileTest = new File(id);
 		String filePath = System.getProperty("user.dir")+"/root";
     	if(!id.equals("/")) {
-    		filePath += id;
+    		String osName = System.getProperty("os.name").toLowerCase();
+    		if(osName.contains("windows")){
+    			filePath = id;
+    		}
+    		else{
+        		filePath += id;
+    		}
     	}
     	
     	try {

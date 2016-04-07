@@ -25,7 +25,9 @@ public class APIFile {
     
     public APIFile(File file, int depth) {
         this.name = file.getName();
-        this.path = file.getPath().replaceFirst(System.getProperty("user.dir")+"/root/?", "/");
+        String systemDir = System.getProperty("user.dir");
+        systemDir = systemDir.replace("\\", "\\\\");
+        this.path = file.getPath().replaceFirst(systemDir+"/root/?", "/");
         this.id = this.path;
         this.directory = file.isDirectory();
         if(depth > 0 && this.directory) {
