@@ -41,7 +41,7 @@ import com.log8430.group9.utils.Http;
 
 /**
  * Main window of the application.
- *
+ *@author LOG8430 group9
  */
 public class MainWindow extends JFrame implements Observer, ActionListener, TreeSelectionListener {
 	

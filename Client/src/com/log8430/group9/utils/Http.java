@@ -18,7 +18,12 @@ import java.net.URLEncoder;
  * et http://stackoverflow.com/questions/2793150/using-java-net-urlconnection-to-fire-and-handle-http-requests
  */
 public class Http {
-	
+	/**
+	 * definition de la requette HTTP get
+	 * @param targetURL url de la requete
+	 * @param urlParameters parametre de la requete
+	 * @return reponse du serveur pour la requete
+	 */
 	public static String get(String targetURL, String urlParameters) {
 		HttpURLConnection connection = null;
 		try {
@@ -36,7 +41,12 @@ public class Http {
 			}
 		}
 	}
-	
+	/**
+	 * definition de la requete HTTP post
+	 * @param targetURL url de la requete
+	 * @param urlParameters parametres de la requete
+	 * @return la reponse du serveur pour la requete
+	 */
 	public static String post(String targetURL, String urlParameters) {
 		HttpURLConnection connection = null;  
 		try {
@@ -65,7 +75,11 @@ public class Http {
 			}
 		}
 	}
-	
+	/**
+	 * fontion d'envoi des requetes HTTP
+	 * @param connection requete a emettre
+	 * @return reponse du serveur pour la requete
+	 */
 	public static String request(HttpURLConnection connection) {
 		try {
 			InputStream is;

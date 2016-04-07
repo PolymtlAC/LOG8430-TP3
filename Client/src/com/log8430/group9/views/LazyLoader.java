@@ -11,9 +11,18 @@ import javax.swing.tree.TreePath;
 import org.json.JSONObject;
 
 import com.log8430.group9.utils.Http;
-
+/**
+ * Classe gerant le chargement des fichiers de l'abre du sercice de gestion de fichier lors de l'expansion des noeuds dans l'interface utilisateur
+ * @author LOG8430 group9
+ *
+ */
 public class LazyLoader implements TreeWillExpandListener {
-
+	/**
+	 * fonction de chargement d'un fichier identifier par son id depuis l'api
+	 * @param id identificateur du fichier a chager
+	 * @param api nom du service de gestion de fichier où se trouve le fichier demandé
+	 * @return
+	 */
 	public static FileNode load(String id, String api) {
 		String params;
 		try {
@@ -35,7 +44,7 @@ public class LazyLoader implements TreeWillExpandListener {
 		
 		return node;
 	}
-	
+
 	@Override
 	public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
 		TreePath treepath = event.getPath();

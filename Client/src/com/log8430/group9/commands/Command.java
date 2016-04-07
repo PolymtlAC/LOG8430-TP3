@@ -10,7 +10,8 @@ public interface Command {
 	/**
 	 * Returns a String which contains the result of the command applied to the file.
 	 *
-	 * @param file  the parameter file for the command
+	 * @param id  the identificator of the file
+	 * @param api name of the file manager api
 	 * @return  a String representing the result of the command
 	 */
 	public String execute(String id, String api);

@@ -24,6 +24,7 @@ public class APIController {
 	 * Le retour de cette url n'est pas du JSON mais un texte qui est affiché à l'utilisateur dans son navigateur.
 	 * 
 	 * @param code parametre de la requete
+	 * @param apiName nom du service de gestion de fichier
 	 * @return Un message affiché dans le navigateur de l'utilisateur
 	 */
 	@RequestMapping("/api/code")

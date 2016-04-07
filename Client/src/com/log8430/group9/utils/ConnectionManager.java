@@ -12,11 +12,21 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
-
+/**
+ * Classe gerant les connexions aux services de gestion de fichier distant
+ * @author LOG8430 group9
+ *
+ */
 public class ConnectionManager {
-	
+	/**
+	 * URL du serveur
+	 */
 	public static String apiURL = "http://localhost:8080";
-	
+	/**
+	 * fonction de connexion au service de gestion de fichier
+	 * @param api nom du service de gestion de fichier
+	 * @return vrai si la connexion est établi
+	 */
 	public static boolean connect(String api) {
 		JSONObject json = new JSONObject(Http.get(apiURL+"/api/is_connected", "api="+api));
 		boolean isConnected = json.getBoolean("connected");
@@ -26,7 +36,11 @@ public class ConnectionManager {
 			return getTokenFromFile(api);
 		}
 	}
-	
+	/**
+	 * connexion au compte utilisateur
+	 * @param api nom de l'API du service de gestion de fichiers
+	 * @return vrai si la connexion est etabli
+	 */
 	private static boolean getTokenFromFile(String api) {
 		boolean isConnected = false;
 		
@@ -42,7 +56,11 @@ public class ConnectionManager {
 			return askForAutorization(api);
 		}
 	}
-
+	/**
+	 * fonction recuperant les droits de l'utilisateur pour le service de gestion de fichier
+	 * @param api ome du service de gestion de fichier
+	 * @return vrai si les authorisations sont bonnes
+	 */
 	private static boolean askForAutorization(String api) {
 		switch(api) {
 			case "dropbox":
@@ -94,7 +112,11 @@ public class ConnectionManager {
 			return false;
 		}
 	}
-
+	/**
+	 * fonction de sauvegarde des identifications de connexion des services de gestion de fichiers
+	 * @param token jeton d'authentification a sauvegarder
+	 * @param api nom du service de gestion de fichiers
+	 */
 	private static void saveToken(String token, String api) {
 		PrintWriter writer;
 		try {
