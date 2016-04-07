@@ -5,10 +5,19 @@ import java.net.HttpURLConnection;
 import org.json.JSONObject;
 
 import com.log8430.group9.models.APIFile;
-
+/**
+ * API du service de gestion de fichier GoogleDrive
+ * @author LOG8430 group9
+ *
+ */
 public class APIGoogleDrive extends AbstractAPI implements API {
-
+	/**
+	 * clé d'identité du serveur pour la connexion
+	 */
 	private static String apiKey = "21850492540-vrduvcqo1l2airu6u1d02eivddcip48u.apps.googleusercontent.com";
+	/**
+	 * clé d'authentification du serveur pour la connexion
+	 */
 	private static String apiSecret = "9krlDxPFGP4pROuTmZi-Otfl";
 	
 	@Override

@@ -5,10 +5,19 @@ import java.net.HttpURLConnection;
 import org.json.JSONObject;
 
 import com.log8430.group9.models.APIFile;
-
+/**
+ * API du service de gestion de fichier Dropbox
+ * @author LOG8430 group9
+ *
+ */
 public class APIDropbox extends AbstractAPI implements API {
-	
+	/**
+	 * clé d'identité du serveur pour la connexion
+	 */
 	private static String apiKey = "0b5l8skd2z5xujs";
+	/**
+	 * clé d'authentification du serveur pour la connexion
+	 */
 	private static String apiSecret = "gha8o37bytj0wae";
 	
 	@Override

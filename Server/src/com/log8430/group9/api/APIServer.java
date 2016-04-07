@@ -3,7 +3,11 @@ package com.log8430.group9.api;
 import java.io.File;
 
 import com.log8430.group9.models.APIFile;
-
+/**
+ * API du service local de gestion de fichier
+ * @author LOG8430 group9
+ *
+ */
 public class APIServer implements API {
 
 	@Override
