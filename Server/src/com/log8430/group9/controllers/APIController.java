@@ -32,7 +32,7 @@ public class APIController {
     		@RequestParam(value="api") String apiName,
     		@RequestParam(value="code") String code) {
 		
-		API api = APIFactory.getAPI(apiName);
+		API api = APIFactory.getInstance().getAPI(apiName);
 		api.askForToken(code);
 		
     	return "Done. You can now return to the application.";
@@ -48,7 +48,7 @@ public class APIController {
     		@RequestParam(value="api") String apiName,
     		@RequestParam(value="token") String token) {
 		
-		API api = APIFactory.getAPI(apiName);
+		API api = APIFactory.getInstance().getAPI(apiName);
 		api.setAccessToken(token);
 		
     	return "{\"connected\": \""+api.isConnected()+"\", \"token\": \""+api.getAccessToken()+"\"}";
@@ -60,7 +60,7 @@ public class APIController {
 	 */
 	@RequestMapping("/api/is_connected")
     public String isConnected(@RequestParam(value="api", defaultValue="server") String apiName) {
-		API api = APIFactory.getAPI(apiName);
+		API api = APIFactory.getInstance().getAPI(apiName);
     	return "{\"connected\": \""+api.isConnected()+"\", \"token\": \""+api.getAccessToken()+"\"}";
 	}
 	

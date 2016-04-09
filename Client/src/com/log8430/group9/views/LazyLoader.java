@@ -10,6 +10,7 @@ import javax.swing.tree.TreePath;
 
 import org.json.JSONObject;
 
+import com.log8430.group9.utils.ConnectionManager;
 import com.log8430.group9.utils.Http;
 /**
  * Classe gerant le chargement des fichiers de l'abre du sercice de gestion de fichier lors de l'expansion des noeuds dans l'interface utilisateur
@@ -30,11 +31,10 @@ public class LazyLoader implements TreeWillExpandListener {
 		} catch (UnsupportedEncodingException e) {
 			params = "api="+api+"&id=/";
 		}
-		
-		JSONObject json = new JSONObject(Http.get("http://localhost:8080/command/metadata", params));
+		System.out.println(Http.get(ConnectionManager.apiURL+"/command/metadata", params));
+		JSONObject json = new JSONObject(Http.get(ConnectionManager.apiURL+"/command/metadata", params));
 
 		FileNode node = new FileNode(json.getString("id"), json.getString("name"), json.getString("path"), json.getBoolean("directory"), api);
-		
 		if(json.optJSONArray("children") != null) {
 			for(Object child : json.optJSONArray("children")) {
 				JSONObject jsonChild = (JSONObject) child;

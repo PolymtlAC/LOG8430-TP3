@@ -1,6 +1,7 @@
 package com.log8430.group9.api;
 
 import java.io.File;
+import java.net.HttpURLConnection;
 
 import com.log8430.group9.models.APIFile;
 /**
@@ -36,7 +37,6 @@ public class APIServer implements API {
 	
 	@Override
 	public APIFile metadata(String id) {
-		File fileTest = new File(id);
 		String filePath = System.getProperty("user.dir")+"/root";
     	if(!id.equals("/")) {
     		String osName = System.getProperty("os.name").toLowerCase();
@@ -61,5 +61,4 @@ public class APIServer implements API {
     		return new APIFile(filePath);
     	}
 	}
-
 }
