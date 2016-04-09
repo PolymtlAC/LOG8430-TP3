@@ -65,7 +65,16 @@ public class UICommand extends JPanel {
 	public void clear() {
 		this.commandResult.setText("");
 	}
-	
+	/**
+	 * accesseur en lecture au resultat de la commande
+	 * @return
+	 */
+	public String getCommandResult(){
+		return commandResult.getText();
+	}
+	public JButton getButton(){
+		return commandButton;
+	}
 	/**
 	 * Modifies the current file. 
 	 * Checks if the command is executable with the file type (file or folder) 
