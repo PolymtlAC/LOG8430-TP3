@@ -217,7 +217,7 @@ public class MainWindow extends JFrame implements Observer, ActionListener, Tree
 		else{
 			int returnValue = JOptionPane.showOptionDialog(null, "Select the API you want to use", "Select an API",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons.toArray(), buttons.get(0));
-			if(returnValue > 0)
+			if(returnValue >= 0)
 				this.currentAPI = buttons.get(returnValue);
 
 			if(!ConnectionManager.connect(this.currentAPI)) {
